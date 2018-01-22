@@ -5,8 +5,8 @@ $(document).ready(function()
 
 function buscar()
 {
-	var buscarNombre = $("#buscarNombre").val();
-	var buscarEmpresa = $("#buscarEmpresa").val();
+	var buscarNombre = $("#buscarnombre").val();
+	var buscarEmpresa = $("#buscarempresa").val();
 
 	$.ajax({
 		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -14,7 +14,7 @@ function buscar()
 		url: "/buscar",
 		dataType: 'json',
 		data: { 
-				buscarNombre:buscarNombre, 
+				buscarNombre: buscarNombre, 
 				buscarEmpresa: buscarEmpresa }
 	})
 

@@ -116,11 +116,11 @@ class UserController extends Controller
     public function buscar(Request $request)
     {
         $html = "";
-        // $idRadicado = null;
-
-        // if($request->session()->get("idRadicado")){
-        //     $idRadicado = $request->session()->get("idRadicado");
-        // }
+        $booleanNombre = False;
+        $booleanCheckNombre = False;
+        $booleanEmpresa = True;
+        $buscarNombre = $_POST['buscarNombre'];    
+        $buscarEmpresa = $_POST['buscarEmpresa'];
 
         $html .= "<table class='table table-bordered'>
                 <thead class='thead-s'>
@@ -141,49 +141,92 @@ class UserController extends Controller
                 </thead>
                 <tbody>";
 
-        $empresas = Empresa::where('id', $idEmpresa)
-                                            ->get();
-        foreach ($empresas as $empresa) {
-            $empresa_id = $empresa->id;        
+        if ($buscarEmpresa != "") {
+            $booleanEmpresa = False;
+            $empresas = Empresa::where('nombre', $buscarEmpresa)
+                                    ->get();        
 
-            $personas = Persona::where('id', $empresa_id)
-                                        ->get();
+            foreach ($empresas as $empresa) {
+                $booleanEmpresa = True;
+                $empresa_id = $empresa->id;
+            }
+
+            if ($booleanEmpresa == True) {
+                $personas = Persona::where('empresa_id', $empresa_id)
+                                    ->get();
+            } 
+    
+        } elseif ($buscarNombre == "") {
+            $booleanCheckNombre = True;
+            $personas = Persona::all();
+        } elseif ($buscarNombre != "") {
+            $booleanCheckNombre = True;
+            $personas = Persona::where('nombre', $buscarNombre)
+                                    ->get();
+        }
+
+        if ($booleanEmpresa == True || $booleanCheckNombre == True) {
+                     
             foreach ($personas as $persona) {
+                $booleanNombre = True;
+                $id = $persona->id;
                 $area_id = $persona->area_id;        
-		        $subarea_id = $persona->subarea_id;        
-		        $ciudad_id = $persona->ciudad_id;        
-		        $cupo_id = $persona->cupo_id; 
+                $subarea_id = $persona->subarea_id;        
+                $empresa_id = $persona->empresa_id;        
+                $ciudad_id = $persona->ciudad_id;        
+                $cupo_id = $persona->cupo_id; 
 
-		        $nombre = $persona->nombre;        
-		        $cargo = $persona->cargo;        
-		        $telefono = $persona->telefono;        
-		        $celular = $persona->celular;        
-		        $email = $persona->email;        
-		        $direccion = $persona->direccion;        
-		        $especializado = $persona->especializado;
+                $nombre = $persona->nombre;        
+                $cargo = $persona->cargo;        
+                $telefono = $persona->telefono;        
+                $celular = $persona->celular;        
+                $email = $persona->email;        
+                $direccion = $persona->direccion;        
+                $especializado = $persona->especializado;
+
+                $Areas = Area::where('id', $area_id)
+                                                    ->get();
+                foreach ($Areas as $area) {
+                    $nombreArea = $area->nombre;
+                }
+
+                $Subareas = Subarea::where('id', $subarea_id)
+                                                    ->get();
+                foreach ($Subareas as $subarea) {
+                    $nombreSubarea = $subarea->nombre;
+                }
+
+                $Empresas = Empresa::where('id', $empresa_id)
+                                                    ->get();
+                foreach ($Empresas as $empresa) {
+                    $nombreEmpresa = $empresa->nombre;
+                }
+
+                $Ciudades = Ciudad::where('id', $ciudad_id)
+                                                    ->get();
+                foreach ($Ciudades as $ciudad) {
+                    $nombreCiudad = $ciudad->nombre;
+                }
+
+                $Cupos = Cupo::where('id', $cupo_id)
+                                                    ->get();
+                foreach ($Cupos as $cupo) {
+                    $nombreCupo = $cupo->nombre;
+                }
 
                 $html .= "<tr class='border-dotted'>";
-	            $html .= "<td class='text-center'>$nombre</td>";
-	            $html .= "<td class='text-center'>$nombreArea</td>";
-	            $html .= "<td class='text-center'>$nombreSubarea</td>";
-	            $html .= "<td class='text-center'>$nombreEmpresa</td>";
-	            $html .= "<td class='text-center'>$cargo</td>";
-	            $html .= "<td class='text-center'>$nombreCiudad</td>";
-	            $html .= "<td class='text-center'>$telefono</td>";
-	            $html .= "<td class='text-center'>$celular</td>";
-	            $html .= "<td class='text-center'>$email</td>";
-	            $html .= "<td class='text-center'>$direccion</td>";
-	            $html .= "<td class='text-center'>$especializado</td>";
-	            $html .= "<td class='text-center'>$nombreCupo</td>";
-	            $html .= "<td class='text-center'>";
-	            $html .= "</td>";
-	            $html .= "</tr>";  
-            }      
+                $html .= "<td class='text-center'>$nombre</td>";
+                $html .= "<td class='text-center'>$nombreEmpresa</td>";
+                $html .= "</tr>";           
+            }
         }
 
         $html .= "</tbody>
                 </table>";
 
+        if ($booleanNombre == False || $booleanEmpresa == False) {
+            $html = "<h1 class='text-center'>No hay telefonos que mostrar</h1>";
+        }
         return Response::json(array('html' => $html));
     }
 }

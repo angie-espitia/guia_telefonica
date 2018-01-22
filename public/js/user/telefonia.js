@@ -5,6 +5,7 @@ $(document).ready(function()
 
 function mostrar()
 {
+	
 	$.ajax({
 		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
 		method: "GET",

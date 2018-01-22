@@ -30,5 +30,5 @@ Route::group(['prefix' => '/'], function()
 {
 	Route::get('/', 'UserController@index')->middleware('auth');
 	Route::get('/mostrar', 'UserController@mostrar')->middleware('auth');
-	Route::get('/buscar', 'UserController@buscar')->middleware('auth');
+	Route::post('/buscar', 'UserController@buscar')->middleware('auth');
 });
