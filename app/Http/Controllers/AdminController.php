@@ -163,4 +163,9 @@ class AdminController extends Controller
     		return Response::json(array('html' => $html));   
     	}
     }
+
+    public function crear()
+    {
+        return view('admin.crear');
+    }
 }

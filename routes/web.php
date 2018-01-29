@@ -23,6 +23,7 @@ Route::group(['prefix' => 'admin'], function()
 	Route::get('/subido', 'AdminController@subido')->middleware('auth');
 
 	Route::post('/guardarArchivo', 'AdminController@guardarArchivo')->middleware('auth');
+	Route::get('/crear', 'AdminController@crear')->middleware('auth');
 	Route::post('/subirRespuestas', 'AdminController@subirRespuestas')->middleware('auth');
 });
 
